@@ -40,7 +40,7 @@ jobs:
       - name: Authenticate Ngrok
         env:
           NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
-        run: ngrok config add-authtoken 2kefJY1az2vD2FySR5SfWDzAXfQ_3aUCWcrCBQoUR3djN2Se8
+        run: ngrok config add-authtoken 2p2JVJ7GjyTerwBA94KYebMHqbq_6BcyF3qYTqH86UDqvfkep
 
       - name: Run Ngrok with Debugging
         shell: cmd
