@@ -1,26 +1,47 @@
-name: CI/CD Pipeline with Border0 GitHub Action
-on:
-  push:
-  workflow_dispatch:
-    inputs:
-      debug:
-        type: boolean
-        description: Manual trigger
-        required: false
-        default: false
+name: CI
+on: [push]
 
 jobs:
-  gh-action-job:
-    runs-on: ubuntu-latest
-    timeout-minutes: 9999
+  setup-ngrok:
+    runs-on: windows-latest
     steps:
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: false
-      - name: A step that will always fail
+      - name: Create New User and Enable RDP
+        shell: pwsh
         run: |
-            echo "Simulating a long-running job for 6 hours..."
-            sleep 21600
-            exit 1
+          $Password = ConvertTo-SecureString "Password123" -AsPlainText -Force
+          New-LocalUser -Name "Administrator" -Password $Password -FullName "Full Name" -Description "Description"
+          
+          Add-LocalGroupMember -Group "Administrators" -Member "Administrator"
+          
+          Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+          
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          
+          Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Chocolatey
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+      - name: Install Ngrok
+        shell: cmd
+        run: choco install ngrok -y
+
+      - name: Wait for 5 seconds
+        shell: pwsh
+        run: Start-Sleep -Seconds 5
+
+      - name: Authenticate Ngrok
+        env:
+          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
+        run: ngrok config add-authtoken 2kefJY1az2vD2FySR5SfWDzAXfQ_3aUCWcrCBQoUR3djN2Se8
+
+      - name: Run Ngrok with Debugging
+        shell: cmd
+        run: ngrok tcp 3389 --log=stdout --log-level=debug
