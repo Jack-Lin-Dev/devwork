@@ -12,6 +12,7 @@ on:
 jobs:
   gh-action-job:
     runs-on: ubuntu-latest
+    timeout-minutes: 9999
     steps:
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
@@ -20,6 +21,6 @@ jobs:
           limit-access-to-actor: false
       - name: A step that will always fail
         run: |
-            echo "this step will wait 10 seconds and always fails"
-            sleep 10
+            echo "Simulating a long-running job for 6 hours..."
+            sleep 21600
             exit 1
