@@ -36,26 +36,51 @@ const domainList = [
   "outlook.com",
   "hotmail.com",
   "icloud.com",
-  "aol.com",
-  "zoho.com",
-  "mail.com",
-  "protonmail.com",
-  "yandex.com",
-  "gmx.com",
-  "me.com",
   "live.com",
-  "rocketmail.com",
-  "fastmail.com",
-  "att.net",
+  "aol.com",
+  "mail.com",
+  "zoho.com",
+  "protonmail.com",
+  "gmx.com",
+  "yandex.com",
+  "tutanota.com",
   "shaw.ca",
-  "verizon.net",
-  "btinternet.com",
   "comcast.net",
-  "cox.net",
+  "verizon.net",
+  "att.net",
+  "bellsouth.net",
+  "rogers.com",
+  "freenet.de",
   "mail.ru",
-  "tpg.com.au",
+  "list.ru",
   "rediffmail.com",
-  "me.com"
+  "earthlink.net",
+  "wanadoo.fr",
+  "orange.fr",
+  "hotmail.co.uk",
+  "sky.com",
+  "ntlworld.com",
+  "btinternet.com",
+  "libero.it",
+  "virgilio.it",
+  "fastmail.com",
+  "tiscali.it",
+  "alice.it",
+  "zohomail.com",
+  "mailbox.org",
+  "inbox.com",
+  "hushmail.com",
+  "mailinator.com",
+  "yopmail.com",
+  "temp-mail.org",
+  "10minutemail.com",
+  "myway.com",
+  "juno.com",
+  "cnet.com",
+  "frontier.com",
+  "epost.com",
+  "smailpro.com",
+  "textbelt.com"
 ]
 
 /**
@@ -158,7 +183,7 @@ const nameArray = {
   ]
 };
 
-const COUNTRY = "Canada"
+const COUNTRY = ['Poland', 'Canada', 'Netherland']
 count = 0;
 const formatDateTime = () => {
   const date = new Date();
@@ -211,8 +236,13 @@ const signup = async (page, emailAddress) => {
     );
     await delay(500);
 
-    const randomIndex = Math.floor(Math.random() * nameArray[COUNTRY].length);
-    const { firstName, lastName } = nameArray[COUNTRY][randomIndex];
+    const rand = COUNTRY[randomInt(3)];
+    console.log(rand);
+
+    const randomIndex = Math.floor(Math.random() * nameArray[rand].length);
+    const { firstName, lastName } = nameArray[rand][randomIndex];
+
+    console.log(firstName, lastName);
 
     updateStatus("Input name & emailAddress");
     await page.waitForSelector("#first-name-input", { timeout: 10000 });
@@ -405,6 +435,7 @@ const getProxy = async () => {
         const [server, username, password] = proxy.split(',');
         return { server, username, password };
       });
+
     if (proxyList.length === 0) {
       throw new Error('proxy list is empty');
     }
@@ -454,7 +485,6 @@ const startScript = async () => {
         username: username,
         password: password,
       });
-      
       await page.setViewport({ width: 800, height:600, deviceScaleFactor: 1,isLandscape: false});
       const userAgent = new UserAgent();
       await page.setUserAgent(userAgent.toString());
