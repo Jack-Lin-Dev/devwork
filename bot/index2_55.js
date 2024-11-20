@@ -468,7 +468,7 @@ async function CheckHumanVerificationPresent(page) {
 
 const getProxy = async () => {
   try {
-    const proxies = await fs.readFile("proxy_2.txt", 'utf-8');
+    const proxies = await fs.readFile("proxy_2_55.txt", 'utf-8');
     const proxyList = proxies
       .split('\n')
       .map(proxy => proxy.trim())
