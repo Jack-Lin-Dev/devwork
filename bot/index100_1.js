@@ -95,7 +95,7 @@ async function sendSlackMessage(message, isGood = true) {
     // Post a message to the channel
     await web.chat.postMessage({
       channel: SLACK_CHANNEL_ID,
-      text: `Index100 ${isGood ? 'TRUE' : 'FALSE'} => ${message}`,
+      text: `Index100_1 ${isGood ? 'TRUE' : 'FALSE'} => ${message}`,
     });
   } catch (error) {
     console.log("send message error!");
@@ -468,7 +468,7 @@ async function CheckHumanVerificationPresent(page) {
 
 const getProxy = async () => {
   try {
-    const proxies = await fs.readFile("proxy_100.txt", 'utf-8');
+    const proxies = await fs.readFile("proxy100_1.txt", 'utf-8');
     const proxyList = proxies
       .split('\n')
       .map(proxy => proxy.trim())
