@@ -95,7 +95,7 @@ async function sendSlackMessage(message, isGood = true) {
     // Post a message to the channel
     await web.chat.postMessage({
       channel: SLACK_CHANNEL_ID,
-      text: `Index1 ${isGood ? 'TRUE' : 'FALSE'} => ${message}`,
+      text: `Index55_1 ${isGood ? 'TRUE' : 'FALSE'} => ${message}`,
     });
   } catch (error) {
     console.log("send message error!");
